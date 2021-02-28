@@ -15,24 +15,31 @@ interface HomeProps {
   level: number;
   currentExperience: number;
   challengesCompleted: number;
+  userName: string;
+  profilePicture: string;
 }
 
 export default function Home({ 
   level,
   currentExperience, 
-  challengesCompleted
+  challengesCompleted,
+  userName,
+  profilePicture
 }: HomeProps) {
   return (
     <ChallengesProvider 
       level={level} 
       currentExperience={currentExperience} 
       challengesCompleted={challengesCompleted}
+      userName={userName}
+      profilePicture={profilePicture}
     >
       <div className={styles.container}>  
         <Head>
           <title>Início | move.it</title>
         </Head>    
-        <ExperiencedBar />
+
+        <ExperiencedBar />       
 
         <CountdownProvider>
           <section>
@@ -52,13 +59,21 @@ export default function Home({
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { level, currentExperience, challengesCompleted} = ctx.req.cookies;
+  const { 
+    level, 
+    currentExperience, 
+    challengesCompleted, 
+    userName, 
+    profilePicture
+  } = ctx.req.cookies;
 
   return {
     props: {
       level: Number(level),
       currentExperience: Number(currentExperience),
-      challengesCompleted: Number(challengesCompleted)
+      challengesCompleted: Number(challengesCompleted),
+      userName,
+      profilePicture
     }
   }
 };

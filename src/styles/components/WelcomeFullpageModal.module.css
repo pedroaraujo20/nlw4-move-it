@@ -1,0 +1,90 @@
+.container {
+  background: var(--blue);
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.background {
+  flex: 1;
+  height: 100%;
+  background: url('/icons/moveit-background.svg') no-repeat center;
+  background-size: cover;
+}
+
+.loginContainer {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  margin-bottom: 7rem;
+}
+
+.loginContainer strong {
+  color: var(--white);
+  font-size: 2.5rem;
+}
+
+.github {
+  display: flex;
+  margin-top: 2rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.github span {
+  margin-left: 1.25rem;
+  color: var(--text-highlight);
+  font-size: 1.25rem;
+}
+
+.insertUsername {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 3rem;
+}
+
+.loginContainer input {
+  padding: 1.5rem;
+  height: 4rem;
+  border: 0;
+  width: 100%;
+  max-width: 20rem;
+  color: var(--text-highlight);
+  background: linear-gradient(90deg, #4953B8 0%, rgba(73, 83, 184, 0.2) 100%);
+  border-radius: 5px 0px 0px 5px;
+  outline: 0;
+  font-size: 1.25rem;
+}
+
+.loginContainer input::placeholder {
+  color: var(--text-highlight);
+  font-size: 1.25rem;
+}
+
+.loginContainer button {
+  height: 4rem;
+  width: 4rem;
+  align-items: center;
+  justify-content: center;
+  background: var(--blue-dark);
+  border: 0;
+  border-radius: 0px 5px 5px 0px;
+  outline: 0;
+}
+
+.loginContainer button:hover {
+  background-color: var(--green);
+}

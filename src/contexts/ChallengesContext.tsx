@@ -1,7 +1,9 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useMemo, useState } from 'react';
 import Cookies from 'js-cookie';
 import challenges from '../../challenges.json';
 import { LevelUpModal } from '../components/LevelUpModal';
+import api from '../services/api';
+import { WelcomeFullpageModal } from '../components/WelcomeFullpageModal';
 
 interface Challenge {
   type: 'body' | 'eye';
@@ -10,6 +12,8 @@ interface Challenge {
 }
 
 interface ChallengesContextData {
+  userName: string;
+  profilePicture: string;
   level: number;
   closeLevelUpModal: () => void;
   currentExperience: number;
@@ -20,6 +24,7 @@ interface ChallengesContextData {
   activeChallenge: Challenge;
   resetChallenge: () => void;
   completeChallenge: () => void;
+  getUserInfo: (username: string) => void;
 }
 
 interface ChallengesProviderProps {
@@ -27,11 +32,15 @@ interface ChallengesProviderProps {
   level: number;
   currentExperience: number;
   challengesCompleted: number;
+  userName: string;
+  profilePicture: string;
 }
 
 export const ChallengesContext = createContext({} as ChallengesContextData);
 
 export function ChallengesProvider({ children, ...rest }: ChallengesProviderProps) {
+  const [userName, setUsername] = useState(rest.userName ?? '');
+  const [profilePicture, setProfilePicture] = useState(rest.profilePicture ?? '');
   const [level, setLevel] = useState(rest.level ?? 1);
   const [currentExperience, setCurrentExperience] = useState(rest.currentExperience ?? 0);
   const [challengesCompleted, setChallengesCompleted] = useState(rest.challengesCompleted ?? 0);
@@ -41,6 +50,8 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
 
   const experienceToNextLevel = Math.pow((level + 1) * 4, 2);
 
+  const isUserRegistered = useMemo(() => !!userName, [userName])
+
   useEffect(() => {
     Notification.requestPermission();
   }, []);
@@ -49,7 +60,17 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
     Cookies.set('level', String(level));
     Cookies.set('currentExperience', String(currentExperience));
     Cookies.set('challengesCompleted', String(challengesCompleted));
-  }, [level, currentExperience, challengesCompleted]);
+    Cookies.set('userName', userName);
+    Cookies.set('profilePicture', profilePicture);
+  }, [level, currentExperience, challengesCompleted, userName, profilePicture]);
+
+  function getUserInfo(username: string) {
+    api.get(`/users/${username}`).then(
+      (response) => {
+        setUsername(response.data.name);
+        setProfilePicture(response.data.avatar_url);
+      });
+  }
 
   function levelUp() {
     setLevel(level + 1);
@@ -101,6 +122,8 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
   return (
     <ChallengesContext.Provider 
       value={{ 
+        userName,
+        profilePicture,
         level, 
         closeLevelUpModal,
         currentExperience,
@@ -110,9 +133,12 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
         startNewChallenge,
         activeChallenge,
         resetChallenge,
-        completeChallenge
+        completeChallenge,
+        getUserInfo,
       }}>
       {children}
+
+      {!isUserRegistered && <WelcomeFullpageModal />}
 
       {isLevelModalOpen && <LevelUpModal />}
     </ChallengesContext.Provider>
