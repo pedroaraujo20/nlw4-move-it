@@ -72,8 +72,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       level: Number(level),
       currentExperience: Number(currentExperience),
       challengesCompleted: Number(challengesCompleted),
-      userName,
-      profilePicture
+      userName: userName || null,
+      profilePicture: profilePicture || null,
     }
   }
 };
